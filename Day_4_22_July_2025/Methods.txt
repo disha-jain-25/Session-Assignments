@@ -1,0 +1,115 @@
+Methods ->
+	- A method is a block of code that performs a specific task.
+	- Syntax:
+		```
+			returnType methodName(parameters) {
+    				// method body
+			}
+		```
+	- Types of Method:
+		1) Static Method:
+			* Does not need to create the Object to call the method, we can call with the help of class_name.method_name().
+			* It is also called the class Method
+			* Example:
+				class StaticMethod{
+					
+					static void method1(){
+						System.out.println("In Method 1");
+					}
+					public static void main(String[] args){
+						StaticMethod.method1();		// Call the Method
+					}
+				}
+		2) Instance Method:
+			* Need to create the object to call the method.
+			* It is also call the Instance Method.
+			* Example:
+				class InstanceMethod{
+					void method1(){
+						System.out.println("In Method 1");
+					}
+					public static void main(String[] args){
+						InstanceMethod im1 = new InstanceMethod();
+						im1.method1();
+					}
+				}		
+
+- Parameters ->
+	* Inputs to a method.
+	* You can define multiple parameters with types.
+	*Example:
+		```
+			void greet(String name) {
+    				System.out.println("Hello, " + name);
+			}
+		```
+
+- Return Type ->
+	* Defines what the method returns.
+	* Use `void` if nothing is returned.
+	*Example with return:
+		```
+			int add(int a, int b) {
+    				return a + b;
+			}
+		```
+
+	*Example with void:
+		```
+			void display() {
+    				System.out.println("Welcome!");
+			}
+		```
+
+- Calling a Method ->
+	* You call a method using its name and pass values if needed.
+
+		```
+			public class Demo {
+    				void greet(String name) {
+        				System.out.println("Hello, " + name);
+    				}
+
+    				public static void main(String[] args) {
+        				Demo obj = new Demo();
+        				obj.greet("Disha");
+    				}
+			}
+		```
+
+- Method Overloading ->
+	* Same method name, but different parameter types or count.
+	* Allows flexibility with inputs.
+	* Example:
+
+		```
+			public class Calculator {
+
+    				int add(int a, int b) {
+        				return a + b;
+    				}
+
+    				double add(double a, double b) {
+        				return a + b;
+    				}
+
+    				int add(int a, int b, int c) {
+       	 				return a + b + c;
+    				}
+
+    				public static void main(String[] args) {
+        				Calculator calc = new Calculator();
+        				System.out.println(calc.add(2, 3));            // 5
+        				System.out.println(calc.add(2.5, 3.5));        // 6.0
+        				System.out.println(calc.add(1, 2, 3));         // 6
+    				}
+			}
+		```
+
+- Summary ->
+	| Concept     | Meaning                         | Example                                        |
+	| ----------- | ------------------------------- | ---------------------------------------------- |
+	| Method      | Reusable block of code          | `void show() { ... }`                          |
+	| Parameters  | Input values to a method        | `int sum(int a, int b)`                        |
+	| Return Type | Data returned by the method     | `return a + b;`                                |
+	| Overloading | Same name, different parameters | `add(int a, int b)`, `add(double a, double b)` |

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Playful Quiz App</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #d4fc79, #96e6a1);
+    padding: 20px;
+    margin: 0;
+    color: #333;
+  }
+
+  .quiz-container {
+    background: #ffffff;
+    padding: 30px 35px;
+    border-radius: 20px;
+    display: inline-block;
+    min-width: 380px;
+    max-width: 90%;
+    box-shadow: 0px 15px 35px rgba(0,0,0,0.15);
+    animation: fadeIn 0.6s ease-in-out;
+    transition: transform 0.3s ease;
+  }
+
+  .quiz-container:hover {
+    transform: translateY(-3px);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .header-image {
+    width: 120px;
+    margin-bottom: 15px;
+  }
+
+  .question {
+    font-size: 22px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #222;
+    line-height: 1.4;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .options button {
+    padding: 14px;
+    border: none;
+    background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .options button:hover {
+    background: linear-gradient(135deg, #66e1f0, #4c8ef7);
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.15);
+  }
+
+  .result {
+    font-size: 18px;
+    margin-top: 25px;
+    padding: 12px;
+    background: #f0f9ff;
+    border-radius: 10px;
+    color: #444;
+    font-weight: bold;
+    min-height: 28px;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    width: 0%;
+    transition: width 0.4s ease-in-out;
+  }
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Quiz Icon" class="header-image">
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <div class="question" id="question"></div>
+  <div class="options" id="options"></div>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+const questions = [
+  { q: "What is 2 + 2?", options: ["3", "4", "5"], answer: "4" },
+  { q: "Capital of France?", options: ["London", "Berlin", "Paris"], answer: "Paris" },
+  { q: "JS keyword for variable?", options: ["var", "make", "set"], answer: "var" }
+];
+
+let score = 0;
+let currentQuestion = 0;
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function saveScore(score) {
+  document.getElementById("result").innerText = "💾 Saving score to server...";
+  await delay(1000);
+
+  document.getElementById("result").innerText = "🔍 Verifying saved score...";
+  await delay(1000);
+
+  document.getElementById("result").innerText = `✅ Score saved! Final score: ${score}/${questions.length}`;
+}
+
+function updateProgress() {
+  const progressPercent = ((currentQuestion) / questions.length) * 100;
+  document.getElementById("progress").style.width = progressPercent + "%";
+}
+
+function loadQuestion() {
+  updateProgress();
+
+  if (currentQuestion < questions.length) {
+    document.getElementById("question").innerText = questions[currentQuestion].q;
+    const optionsContainer = document.getElementById("options");
+    optionsContainer.innerHTML = "";
+
+    questions[currentQuestion].options.forEach(option => {
+      const btn = document.createElement("button");
+      btn.innerText = option;
+      btn.onclick = () => handleAnswer(option);
+      optionsContainer.appendChild(btn);
+    });
+
+  } else {
+    updateProgress();
+    saveScore(score);
+  }
+}
+
+function handleAnswer(selected) {
+  if (selected === questions[currentQuestion].answer) {
+    score++;
+  }
+  currentQuestion++;
+  loadQuestion();
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>

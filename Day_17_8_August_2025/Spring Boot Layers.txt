@@ -1,0 +1,40 @@
+How does a Web Server works in Spring Boot ?
+
+Client ---Http Request---> Tomcat(Web Server) ---Map to the Servlet----> DispatcherServlet(Router&Dispatcher)
+      <---JSON Response --------|							|
+				|							|
+				|							|
+				|							|
+				|					1)It Creates HttpServletRequest & HttpServletResponse objects.
+				|					2)It then delegates the request to HandlerMapping(like @GetMapping("/api/hello").
+	-------------------------					3) The controller method is invoked. 
+	|										|
+	|										|
+	|										|
+	|										|
+	|								Controller(Handler Requests & Responses)
+	|											|
+	|										|		
+	|										|
+	|					1) Validation ---------------------------
+HttpMessage Converter-------------------------- 2) Authentication
+(JSON Serialization)				3) Business Logic
+						4) DB Query
+
+
+
+		(Handle Request & Response)	  (Business Logic)		(Data Access Layer)
+Client Request ---> Presentation Layer ----DTO---> Service Layer --- Entity----> Persistence Layer
+											|
+											|
+											|
+											|
+Converted JSON <------- Presentation Layer -----DTO------- Service Layer <--- Entity ----- DB Postgres
+
+
+
+
+- Spring Boot Web Project Structure:
+	Client --- Controller ---DTO--- Service ---Entity--- repository --- Actual Database.
+
+ 

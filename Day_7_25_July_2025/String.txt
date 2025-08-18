@@ -1,0 +1,301 @@
+1. `String` Class in Java
+
+	- Explanation:
+		* `String` is a class in Java used to create and manipulate **character sequences**.
+		* It is **immutable**, meaning **once created, it cannot be changed**.
+
+	-  Why is `String` Immutable?
+
+		| Reason                    | Explanation                                                                               |
+		| ------------------------- | ----------------------------------------------------------------------------------------- |
+		|    Security               | Used in network connections, file paths, etc. Prevents unwanted modifications.            |
+		|    String Pool Efficiency | JVM uses a **String Constant Pool**. Reusing immutable strings avoids duplication.        |
+		|    Thread-safety          | Immutability makes `String` inherently **thread-safe** without synchronization.           |
+		|    Hashing                | Strings are often used as **keys in HashMap**. Immutability ensures hashcode consistency. |
+
+ 	- Memory in JVM:
+		* String literals (e.g. `"Hello"`) are stored in the **String Constant Pool** in the **Method Area** (or **Metaspace** in Java 8+).
+		* If a new string is created using `new String()`, it is stored in the **heap memory**, but the literal part still goes to the pool.
+
+	- Common Methods:
+
+		```
+			length(), charAt(), substring(), equals(), equalsIgnoreCase(), 
+			toUpperCase(), toLowerCase(), indexOf(), replace(), trim(), concat()
+		```
+	- Example:
+		```
+			public class StringExample {
+    				public static void main(String[] args) {
+        				String s = "Hello";                  // Stored in String Pool
+        				System.out.println(s.length());     // 5
+        				System.out.println(s.charAt(1));    // 'e'
+        				System.out.println(s.toUpperCase()); // "HELLO"
+        				System.out.println(s.concat(" World")); // "Hello World"
+        				System.out.println(s);              // Still "Hello" (original is unchanged)
+    				}
+			}
+		```
+
+2. `StringBuilder` Class
+
+	- Explanation:
+		* Mutable: You can change the contents of the object.
+		* Not thread-safe (not synchronized) — but **faster** than `StringBuffer`.
+
+	- JVM Memory:
+		* Stored in heap memory, just like any other object created using `new`.
+	
+	- Methods:
+
+		```
+			append(), insert(), delete(), reverse(), replace(), capacity(), toString()
+		```
+
+	- Example:
+
+		```
+			public class StringBuilderExample {
+    				public static void main(String[] args) {
+        				StringBuilder sb = new StringBuilder("Hello");
+        				sb.append(" World");
+        				System.out.println(sb); // Hello World
+        				sb.reverse();
+        				System.out.println(sb); // dlroW olleH
+    				}
+			}
+		```
+
+3. `StringBuffer` Class
+
+	- Explanation:
+
+		* Like `StringBuilder`, but thread-safe (methods are synchronized)
+		* Slower in single-threaded apps, but safer in multithreaded ones
+
+	- JVM Memory:
+		* Also stored in heap memory when created using `new`.
+
+	- Example:
+
+		```
+			public class StringBufferExample {
+    				public static void main(String[] args) {
+        				StringBuffer sb = new StringBuffer("Java");
+        				sb.append(" Programming");
+        				System.out.println(sb); // Java Programming
+        				sb.insert(5, "is ");
+        				System.out.println(sb); // Java is Programming
+    				}
+			}	
+		```
+
+
+* Summary Comparison Table:
+
+	| Feature         | `String`           | `StringBuilder` | `StringBuffer`       |
+	| --------------- | ------------------ | --------------- | -------------------- |
+	|   Mutable       |    No              | Yes             | Yes                  |
+	|   Thread-safe   |    (Immutable)     | No              | Yes (Synchronized)   |
+	|   Speed         |    Slower          | Fastest         | Slower               |
+	|   Stored In     | String Pool / Heap | Heap Memory     | Heap Memory          |
+	|   Use case      | Constants, Keys    | Fast string ops | Multithreaded apps   |
+
+- When to Use What?
+
+	| Situation                             | Best Option     |
+	| ------------------------------------- | --------------- |
+	| Fixed data, e.g., messages            | `String`        |
+	| Heavy string modifications            | `StringBuilder` |
+	| Safe multi-threaded string operations | `StringBuffer`  |
+
+
+- Exception Handling ->
+
+	- What is an Exception?
+		An exception is an event that disrupts the normal flow of the program during runtime.
+
+	- Types of Exceptions
+
+		1. Checked Exceptions (Compile-Time Exceptions)
+
+			- Handled at compile time. Must be either caught or declared using `throws`.
+			- Examples:
+				* `IOException`
+				* `InterruptedException`
+				* `SQLException`
+				* `FileNotFoundException`
+
+			- Example:
+
+				```
+					import java.io.*;
+
+						public class CheckedExample {
+    							public static void main(String[] args) {
+        							try {
+            								FileReader file = new FileReader("test.txt"); // FileNotFoundException
+        							} catch (FileNotFoundException e) {
+            								System.out.println("File not found!");
+        							}
+    							}
+						}
+				```
+
+		2.Unchecked Exceptions** (Runtime Exceptions)
+
+			- Occur at runtime and are not checked at compile time.
+			- Examples:
+				* `ArithmeticException`
+				* `NullPointerException`
+				* `ArrayIndexOutOfBoundsException`
+
+			- Example:
+
+				```
+					public class UncheckedExample {
+    						public static void main(String[] args) {
+        						int a = 10 / 0; // ArithmeticException
+    						}
+					}
+				```
+
+		3.Errors:
+
+			- Serious problems, mostly related to the environment. Not meant to be handled by code.
+			- Examples:
+				* `StackOverflowError`
+				* `OutOfMemoryError`
+
+	- Keywords in Exception Handling
+
+		1. `try-catch`:
+			- Used to catch exceptions and define alternative logic.
+			- Example:
+				```
+					public class TryCatchExample {
+    						public static void main(String[] args) {
+        						try {
+            							int data = 50 / 0;
+        						} catch (ArithmeticException e) {
+            							System.out.println("Cannot divide by zero!");
+        						}
+    						}
+					}
+				```
+
+		2. `finally`:
+			- Block that always executes whether exception occurs or not.
+			- Example:
+
+				```
+					public class FinallyExample {
+    						public static void main(String[] args) {
+        						try {
+            							int a = 5 / 0;
+        						} catch (Exception e) {
+            							System.out.println("Handled");
+        						} finally {
+            							System.out.println("This will always execute.");
+       						 	}
+   					 	}
+					}
+				```
+
+		3. `throw`:
+			- Used to manually throw(Custom Exception) an exception.
+			- Example:
+
+				```
+					public class ThrowExample {
+    						public static void main(String[] args) {
+        						int age = 15;
+        						if (age < 18) {
+            							throw new ArithmeticException("Not eligible to vote");
+        						}
+        						System.out.println("Eligible to vote");
+    						}
+					}	
+				```
+
+		4. `throws`:
+
+			- Used in method signature to declare an exception.
+			- Example:
+
+				```
+					import java.io.*;
+
+					public class ThrowsExample {
+    						public static void main(String[] args) throws IOException {
+        						BufferedReader br = new BufferedReader(new FileReader("test.txt"));
+        						System.out.println(br.readLine());
+    						}
+					}
+				```
+
+- Custom Exception (User-Defined):
+
+	Steps:
+		1. Extend `Exception` class.
+		2. Create constructor.
+		3. Use `throw` to raise.
+	- Example:
+
+		```
+			class AgeException extends Exception {
+    				public AgeException(String message) {
+        				super(message);
+    				}
+			}
+
+			public class CustomExceptionExample {
+    				public static void checkAge(int age) throws AgeException {
+        				if (age < 18) {
+            					throw new AgeException("You are underage!");
+        				}
+    				}
+
+    				public static void main(String[] args) {
+        				try {
+            					checkAge(16);
+        				} catch (AgeException e) {
+            					System.out.println("Custom Exception: " + e.getMessage());
+        				}
+    				}
+			}
+		```
+
+- Try-With-Resources (Latest Way)
+
+	- Introduced in Java 7. Automatically closes resources (e.g., file, DB connection).
+	- Example:
+
+		```
+			import java.io.*;
+
+			public class TryWithResources {
+    				public static void main(String[] args) {
+        				try (BufferedReader br = new BufferedReader(new FileReader("test.txt"))) {
+            					System.out.println(br.readLine());
+        				} catch (IOException e) {
+            					System.out.println("Exception: " + e);
+        				}
+    				}
+			}
+		```
+
+- Summary Table
+
+	| Concept                 | Description                                            |
+	| ----------------------- | ------------------------------------------------------ |
+	| `try`                   | Used to write risky code                               |
+	| `catch`                 | Handles the exception                                  |
+	| `finally`               | Always runs (even if exception is not caught)          |
+	| `throw`                 | Manually throws exception                              |
+	| `throws`                | Declares exceptions a method can throw                 |
+	| Checked Exception       | Compiler checks at compile time (`IOException`)        |
+	| Unchecked Exception     | Occur at runtime (`NullPointerException`)              |
+	| Error                   | Critical issue, not meant to be caught (`OutOfMemory`) |
+	| Custom Exception        | User-defined exception                                 |
+	| Try-With-Resources      | Auto-closes resources                                  |

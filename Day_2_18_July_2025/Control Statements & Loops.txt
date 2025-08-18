@@ -1,0 +1,167 @@
+Control Statements & Loops ->
+
+	Control Statement ->
+		
+		1. `if` Statement:
+
+			- Used to run code **only if a condition is true**.
+			- Syntax:
+
+				```
+					if (condition) {
+    						// code to execute
+					}
+				```
+			- Example:
+
+				```
+					int age = 18;
+					if (age >= 18) {
+    						System.out.println("Eligible to vote");
+					}
+				```
+
+		2. `if-else` Statement:
+
+			- Executes one block if condition is true, another if false.
+			- Syntax:
+
+				```
+					if (condition) {
+    						// true block
+					} else {
+    						// false block
+					}
+				```
+			- Example:
+
+				```
+					int num = 5;
+					if (num % 2 == 0) {
+    						System.out.println("Even");
+					} else {
+ 	   					System.out.println("Odd");
+					}
+				```
+
+		3. `else if` Ladder:
+
+			- Checks multiple conditions in sequence.
+			- Syntax:
+
+				```
+					if (cond1) {
+    						// block 1
+					} else if (cond2) {
+    						// block 2
+					} else {
+    						// default block
+					}
+				```
+
+			- Example:
+				```
+					int marks = 75;
+					if (marks >= 90) {
+    						System.out.println("Grade A");
+					} else if (marks >= 70) {
+    						System.out.println("Grade B");
+					} else {
+    						System.out.println("Grade C");
+					}
+				```
+
+		4. `switch` Statement:
+
+			- Best for comparing one variable with many values.
+			- Syntax:
+
+				```
+					switch (variable) {
+    						case value1:
+        						// code
+        						break;
+    						case value2:
+        						// code
+        						break;
+    						default:
+        						// default code	
+					}
+				```
+
+			- Example:
+
+				```
+					int day = 1;
+					switch (day) {
+    						case 1:
+        						System.out.println("Sunday");
+        						break;
+    						case 2:
+        						System.out.println("Monday");
+        						break;
+    						default:
+        						System.out.println("Other day");
+					}
+				```
+
+	Loops ->
+
+		1. `for` Loop:
+
+			- Runs a block a fixed number of times.
+			- Syntax:
+
+				```
+					for (init; condition; update) {
+    						// loop body
+					}
+				```
+			- Example:
+
+				```
+					for (int i = 1; i <= 5; i++) {
+    						System.out.println(i);
+					}
+				```
+
+		2. `while` Loop:
+
+			- Checks condition before each loop.
+			- Syntax:
+
+				```
+					while (condition) {
+    						// loop body
+					}
+				```
+			- Example:
+
+				```
+					int i = 1;
+					while (i <= 5) {
+    						System.out.println(i);
+    						i++;
+					}
+				```
+
+		3. `do-while` Loop:
+
+			- Runs at least once, checks condition after the loop.
+			- Syntax:
+
+				```
+					do {
+    						// loop body
+					} while (condition);
+				```
+
+			- Example:
+
+				```
+					int i = 1;
+					do {
+    						System.out.println(i);
+    						i++;
+					} while (i <= 5);
+				```

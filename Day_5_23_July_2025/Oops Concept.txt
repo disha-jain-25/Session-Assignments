@@ -1,0 +1,179 @@
+Oops Concept ->
+	
+	- Class and Object:
+		* Class: A blueprint for creating objects.
+		* Object: A real instance of a class.
+
+			```
+				class Car {
+    					String brand;
+    					void start() {
+        					System.out.println(brand + " car is starting.");
+    					}
+				}
+
+				public class Main {
+    					public static void main(String[] args) {
+        					Car myCar = new Car(); // Object
+        					myCar.brand = "Toyota";
+        					myCar.start(); // Output: Toyota car is starting.
+    					}
+				}
+			```
+
+	- Constructor:
+		* Special method to **initialize objects**.
+		* Has the **same name** as class, no return type.
+
+			```
+				class Student {
+    					String name;
+    					Student(String n) {  // Constructor
+        					name = n;
+    					}
+				}
+			```
+
+	- `this` Keyword:
+		* Refers to the current object.
+
+			```
+				class Student {
+    					String name;
+    					Student(String name) {
+        					this.name = name; // differentiates field and parameter
+    					}
+				}
+			```
+
+	- `static` Keyword:
+		* Belongs to class, not object.	
+		* Used for shared variables or methods.
+
+			```
+				class Counter {
+    					static int count = 0;
+    					Counter() {
+        					count++;
+        					System.out.println(count);
+    					}
+				}
+			```
+
+	- Private Fields + Getters/Setters — Encapsulation:
+		* Encapsulation: Hides data using `private` and exposes it via getters/setters.
+
+			```
+				class Employee {
+    					private String name;
+
+    					public void setName(String n) {
+        					name = n;
+    					}
+
+    					public String getName() {
+        					return name;
+    					}
+				}
+			```
+
+	- Inheritance — `extends` & `super`:
+		* `extends`: Inherit properties from a superclass.
+		* `super`: Call superclass methods/constructors.
+
+			```
+				class Animal {
+    					void sound() {
+        					System.out.println("Animal sound");
+    					}
+				}
+				class Dog extends Animal {
+    					void sound() {
+        					super.sound(); // calls Animal's sound()
+        					System.out.println("Dog barks");
+    					}
+				}
+			```
+
+	- Polymorphism:
+		* Method Overloading (Compile-time):
+			* Same method name, **different parameters**.
+		
+				```
+					class Calculator {
+    						int add(int a, int b) {
+        						return a + b;
+    						}
+
+    						double add(double a, double b) {
+        						return a + b;
+    						}
+					}
+				```
+
+		* Method Overriding (Runtime):
+			* Subclass redefines a superclass method.
+
+				```
+					class Shape {
+    						void draw() {
+        						System.out.println("Drawing shape");
+    						}
+					}
+
+					class Circle extends Shape {
+    						void draw() {
+        						System.out.println("Drawing circle");
+    						}
+					}
+				```
+
+	- Abstraction — abstract class, interface, implements:
+		* Abstract Class:
+			* Cannot be instantiated.
+			* Can have abstract and non-abstract methods.
+
+				```
+					abstract class Vehicle {
+    						abstract void run(); // abstract method
+
+    						void stop() {
+        						System.out.println("Vehicle stopped");
+    						}
+					}
+
+					class Bike extends Vehicle {
+    						void run() {
+        						System.out.println("Bike is running");
+    						}
+					}
+				```
+
+		* Interface:
+			* Fully abstract by default (only method declarations).
+			* Use `implements` to use it.
+
+				```	
+					interface Drawable {
+    						void draw();
+					}
+
+					class Rectangle implements Drawable {
+    						public void draw() {
+        						System.out.println("Drawing rectangle");
+    						}
+					}
+				```
+
+	- Summary Table
+
+		| Concept       | Keyword/Tool                          | Description                    |
+		| ------------- | ------------------------------------- | ------------------------------ |
+		| Class/Object  | `class`, `new`                        | Blueprint / real instance      |
+		| Constructor   | Class name                            | Initializes object             |
+		| `this`        | `this`                                | Refers to current object       |
+		| `static`      | `static`                              | Shared across all objects      |
+		| Encapsulation | `private`, `get`, `set`               | Hides data, uses accessors     |
+		| Inheritance   | `extends`, `super`                    | Parent-child relationship      |
+		| Polymorphism  | Overloading / Overriding              | Same method name, diff usage   |
+		| Abstraction   | `abstract`, `interface`, `implements` | Hides details, shows essential |

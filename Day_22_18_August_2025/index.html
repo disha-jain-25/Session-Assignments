@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Grade Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #97c8b0, #9be2d5);
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #2b2b2b;
+    }
+
+    .card {
+      background: #fff;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    }
+
+    form {
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 8px;
+      margin: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .error {
+      color: red;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #e0f7fa;
+    }
+
+    .highlight {
+      background-color: #c8e6c9;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📘 Student Grade Tracker</h1>
+
+  <div class="card">
+    <form id="studentForm">
+      <input type="text" id="name" placeholder="Enter Name" required>
+      <input type="number" id="id" placeholder="Enter ID" required>
+      <input type="text" id="marks" placeholder="Enter Marks (comma separated)" required>
+      <button type="submit">Submit</button>
+    </form>
+    <p id="errorMsg" class="error"></p>
+  </div>
+
+
+  <div class="card" id="studentCard">
+    <p>No students added yet.</p>
+  </div>
+
+  <script>
+    const students = []; 
+
+    function calculateGrade(...marks) {
+      const total = marks.reduce((sum, m) => sum + m, 0);
+      const avg = total / marks.length;
+
+      let grade;
+      if (avg >= 90) grade = "A";
+      else if (avg >= 75) grade = "B";
+      else if (avg >= 60) grade = "C";
+      else if (avg >= 40) grade = "D";
+      else grade = "F";
+
+      return { avg, grade };
+    }
+
+    function createStudent(name, id, ...marks) {
+      const { grade } = calculateGrade(...marks);
+      return {
+        name,
+        id,
+        marks,
+        grade
+      };
+    }
+
+    function fakeFetch(student) {
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(student), 1000);
+      });
+    }
+
+    function displayStudents() {
+      const card = document.getElementById("studentCard");
+
+      if (students.length === 0) {
+        card.innerHTML = "<p>No students added yet.</p>";
+        return;
+      }
+
+      let rows = students.map(s => `
+        <tr>
+          <td>${s.name}</td>
+          <td>${s.id}</td>
+          <td>${s.marks.join(", ")}</td>
+          <td class="highlight">${s.grade}</td>
+        </tr>
+      `).join("");
+
+      card.innerHTML = `
+        <h3>🧑 All Students</h3>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Marks</th>
+            <th>Grade</th>
+          </tr>
+          ${rows}
+        </table>
+      `;
+    }
+
+    document.getElementById("studentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const id = document.getElementById("id").value;
+      const marks = document.getElementById("marks").value
+                        .split(",")
+                        .map(m => parseInt(m.trim()))
+                        .filter(m => !isNaN(m));
+
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.textContent = "";
+
+      if (students.some(s => s.id === id)) {
+        errorMsg.textContent = "⚠️ Error: Student ID must be unique!";
+        return;
+      }
+
+      const student = createStudent(name, id, ...marks);
+
+      errorMsg.textContent = "⏳ Adding student...";
+      
+      fakeFetch(student).then((result) => {
+        students.push(result); 
+        errorMsg.textContent = "";
+        displayStudents();
+      });
+    });
+  </script>
+</body>
+</html>

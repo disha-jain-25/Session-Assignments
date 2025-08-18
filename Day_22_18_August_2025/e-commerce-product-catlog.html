@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-Commerce Product Catalog</title>
+  <style>
+    :root{
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #222;
+      --muted:#6b7280;
+      --brand:#2563eb;
+      --brand-dark:#1e40af;
+      --success:#22c55e;
+      --success-dark:#15803d;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+      --radius:14px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg,#eef2ff 0%, #f5f7fb 30%, #f9fafb 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    header{
+      padding:24px 16px 12px;
+      text-align:center;
+    }
+    header h1{
+      margin:0 0 8px;
+      font-size:1.8rem;
+      letter-spacing:.3px;
+    }
+    header p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .controls{
+      margin:16px auto 0;
+      padding:12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+      max-width:1100px;
+    }
+
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px; border-radius:999px; border:1px solid #e5e7eb;
+      background:#fff; box-shadow: var(--shadow);
+    }
+
+    input, select{
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid #e5e7eb;
+      outline:none;
+      transition: box-shadow .2s, border-color .2s;
+      background:#fff;
+    }
+    input:focus, select:focus{border-color:var(--brand); box-shadow:0 0 0 4px rgba(37,99,235,.1);}
+
+    .btn{
+      padding:10px 14px; border:none; border-radius:10px; cursor:pointer; font-weight:600;
+      transition: transform .12s ease, filter .2s ease, background .2s ease;
+      box-shadow: var(--shadow);
+    }
+    .btn:active{ transform: translateY(1px) }
+
+    .btn-primary{ background: linear-gradient(135deg,var(--brand),var(--brand-dark)); color:#fff; }
+    .btn-success{ background: linear-gradient(135deg,var(--success),var(--success-dark)); color:#fff; }
+    .btn-ghost{ background:#fff; color:var(--text); border:1px solid #e5e7eb; }
+
+    .badge{
+      background:#fff; color:var(--brand-dark);
+      border:1px solid #e5e7eb; padding:2px 8px; border-radius:999px; font-size:.8rem; font-weight:700;
+    }
+
+    .grid{
+      max-width:1100px; margin:18px auto 40px; padding:0 12px;
+      display:grid; gap:22px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 280px));
+      justify-content:center;
+    }
+
+    .card{
+      background:var(--card); border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex; flex-direction:column; justify-content:space-between;
+      height:380px;                       /* ✅ equal height for all */
+      transition: transform .18s ease, box-shadow .25s ease;
+    }
+    .card:hover{ transform: translateY(-6px); box-shadow: 0 12px 32px rgba(0,0,0,.12); }
+
+    .thumb{
+      width:100%; height:160px; object-fit:cover; display:block;
+    }
+    .body{
+      padding:14px 14px 12px; display:flex; flex-direction:column; gap:6px; flex:1;
+    }
+    .title{ font-size:1.05rem; margin:0; line-height:1.2 }
+    .muted{ color:var(--muted); font-size:.9rem }
+    .price{ font-weight:800; margin-top:auto }
+
+    .actions{ padding:12px 14px 16px; display:flex; gap:8px }
+    .btn-heart{
+      flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+      font-weight:700;
+    }
+    .btn-view{ white-space:nowrap }
+
+    .in-wishlist{ background: linear-gradient(135deg,var(--success),var(--success-dark)); color:#fff; }
+
+    .empty{
+      grid-column:1/-1; text-align:center; color:var(--muted);
+      padding:24px; border:1px dashed #e5e7eb; border-radius:14px; background:#fff;
+    }
+
+    @media (max-width:480px){
+      .card{ height:400px }
+      .thumb{ height:180px }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🛒 Product Catalog</h1>
+    <p>Search • Filter • Sort • Save to Wishlist (persisted in your browser)</p>
+  </header>
+
+  <section class="controls">
+    <input id="search" type="text" placeholder="🔎 Search products..." />
+    <select id="categoryFilter" aria-label="Filter by category">
+      <option value="all">All Categories</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Fashion">Fashion</option>
+      <option value="Home">Home</option>
+    </select>
+    <select id="sort" aria-label="Sort by price">
+      <option value="default">Sort: Recommended</option>
+      <option value="low">Price: Low → High</option>
+      <option value="high">Price: High → Low</option>
+    </select>
+
+    <span class="chip">
+      <button id="btnAll" class="btn btn-ghost">📦 All Products</button>
+      <button id="btnWishlist" class="btn btn-primary btn-view">
+        ❤️ Wishlist <span id="wishCount" class="badge">0</span>
+      </button>
+    </span>
+  </section>
+
+  <main id="productList" class="grid"></main>
+
+  <script>
+    
+    const products = [
+      { id: 1, name: "Smartphone", category: "Electronics", price: 300, img: "https://media.ldlc.com/ld/products/00/04/65/16/LD0004651600_2.jpg" },
+      { id: 2, name: "Laptop", category: "Electronics", price: 800, img: "http://www.riskmanagementmonitor.com/wp-content/uploads/2014/12/Laptop1.jpg" },
+      { id: 3, name: "T-Shirt", category: "Fashion", price: 20, img: "https://cdn.pixabay.com/photo/2024/02/06/18/10/ai-generated-8557635_1280.jpg" },
+      { id: 4, name: "Jeans", category: "Fashion", price: 40, img: "https://tse3.mm.bing.net/th/id/OIP._RqhZ8c85y_xeLgyPmSAxQHaLH?rs=1&pid=ImgDetMain&o=7&rm=3" },
+      { id: 5, name: "Sofa", category: "Home", price: 500, img: "https://tse2.mm.bing.net/th/id/OIP.ajRJhWSQygdDZ4lYhVvViAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" },
+      { id: 6, name: "Mixer Grinder", category: "Home", price: 100, img: "https://images.philips.com/is/image/PhilipsConsumer/HL7699_00-IMS-en_IN?$jpglarge$&wid=1250" }
+    ];
+
+
+    let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    let viewMode = "all"; 
+
+    const listEl = document.getElementById("productList");
+    const searchEl = document.getElementById("search");
+    const catEl = document.getElementById("categoryFilter");
+    const sortEl = document.getElementById("sort");
+    const btnAll = document.getElementById("btnAll");
+    const btnWishlist = document.getElementById("btnWishlist");
+    const wishCountEl = document.getElementById("wishCount");
+
+    const inWishlist = id => wishlist.includes(id);
+
+    function saveWishlist(){
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      wishCountEl.textContent = String(wishlist.length);
+    }
+
+    function toggleWishlist(id){
+      if(inWishlist(id)){
+        wishlist = wishlist.filter(x => x !== id);
+      }else{
+        wishlist.push(id);
+      }
+      saveWishlist();
+      render(); 
+    }
+
+    function filteredProducts(){
+      const term = searchEl.value.trim().toLowerCase();
+      const category = catEl.value;
+
+
+      let base = viewMode === "wishlist" ? products.filter(p => wishlist.includes(p.id)) : products.slice();
+
+   
+      let out = base.filter(p =>
+        p.name.toLowerCase().includes(term) && (category === "all" || p.category === category)
+      );
+
+      if (sortEl.value === "low") out.sort((a,b)=>a.price - b.price);
+      if (sortEl.value === "high") out.sort((a,b)=>b.price - a.price);
+
+      return out;
+    }
+
+    function cardHTML(p){
+      const wished = inWishlist(p.id);
+      return `
+        <article class="card">
+          <img class="thumb" src="${p.img}" alt="${p.name}" loading="lazy" />
+          <div class="body">
+            <h3 class="title">${p.name}</h3>
+            <div class="muted">Category: ${p.category}</div>
+            <div class="price">$${p.price}</div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-heart ${wished ? 'in-wishlist' : 'btn-ghost'}" onclick="toggleWishlist(${p.id})" aria-pressed="${wished}">
+              ${wished ? '✔ In Wishlist' : 'Add to Wishlist'}
+            </button>
+          </div>
+        </article>
+      `;
+    }
+
+    function render(){
+      const items = filteredProducts();
+      listEl.innerHTML = items.length
+        ? items.map(cardHTML).join("")
+        : `<div class="empty">${viewMode==='wishlist' ? 'Your wishlist is empty.' : 'No products found.'}</div>`;
+    }
+
+ 
+    searchEl.addEventListener("input", render);
+    catEl.addEventListener("change", render);
+    sortEl.addEventListener("change", render);
+
+    btnAll.addEventListener("click", ()=>{
+      viewMode = "all";
+      btnAll.className = "btn btn-ghost";
+      btnWishlist.className = "btn btn-primary btn-view";
+      render();
+    });
+
+    btnWishlist.addEventListener("click", ()=>{
+      viewMode = "wishlist";
+      btnAll.className = "btn btn-ghost";
+      btnWishlist.className = "btn btn-primary btn-view";
+      render();
+    });
+
+  
+    saveWishlist(); 
+    render();
+
+    window.toggleWishlist = toggleWishlist;
+  </script>
+</body>
+</html>

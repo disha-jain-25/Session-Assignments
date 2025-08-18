@@ -1,0 +1,76 @@
+Kafka:
+	- Kafka is horizontally Scalable, fault tolerant and fast messaging system.
+	- It's a pub-sub(publisher-subscriber) model in which various producers and consumers can write and read.
+	- It decouples source and target systems.
+	- Some of the key features are:
+		- Scale to 100s of nodes 
+		- Can handle millions of message per second 
+		- Low Latency: as low as 2ms
+		- High Throughput: 100s MB/s with 100Ks of messages/s
+	
+	- Use Kafka for:
+		- Real-time data streaming
+		- Log aggregation
+		- Event Sourcing
+		- Messaging
+		- Batch Data processing	
+	
+	- Do not use Kafka for:
+		- Simple Request-Response Communication.
+		- Small-scale Projects
+		- High Latency Tolerance 
+		- Monolithic Applications
+
+	- Some More Message Queues:
+		- RabbitMQ: RabbitMQ is a message Queue Server in Erlang. Stores Jobs in memory(message Queue)
+		- Apache ActiveMQ: ActiveMQ is an open-source message broker in Java	
+		- Kafka: Written at LinkedIn in Scala
+			- Used by LinkedIn to offload processing of all page and other views.
+			- Default to using persistence, uses OS disk cache for hot data (has higher throughput then any of the above 
+			  having persistence enabled)
+		- Amazon Simple Queue Service(SQS): Fully managed message queuing for microservices, distributed systems, and serverless applications.
+	
+	- Kafka Architecture:
+		
+	Spring Boot(API endpoint)(Producer) -----------> Kafka Cluster(Broker1,Broker2,Broker3)<--->(Zookeeper) ----------------> Spring Boot(Consumer)
+	
+		- Kafka is moving away from its dependency on Zookeeper and using Kafka's KRaft (Kafka Raft) mode for maintaining brokers.
+	
+	- Key Terminologies: 
+		- Producer, Consumer, Events, Cluster, Broker
+		- Topic, Partitions and Offsets.
+	
+	- Kafka Topic:
+		
+		- A topic is a specific stream of data.
+		- It is very similar to a table in a NoSQL database.
+		- Like tables in a NoSQL database, the topic is split into "partitions" that enable topic to be distributed across various nodes.
+		- Like primary keys in a tables, topics have offset per partitions.
+		- we can uniquely identify a message using its topic, partitions and offset.
+		- Some topics names for ECommerce Application would be: order-placed, order-shipped, inventory-updated, payment-processed.
+
+
+- Topic Partitions:
+	- Kafka topics are subdivided into partitions, which are basic of unit of parallelism in Kafka.
+	- Each partition is an ordered, immutable sequence of records.
+	- Data within a partition is assigned a unique, incremental offset to track the order of messages.
+	- Partitions allow for scalability, as data can be distributed across multiple brokers, enabling horizontal scaling and concurrent consumptions
+          by multiple consumers.
+
+- Partition Offset:
+	- Offset is a unique identifier assigned to each record within a partition.
+	- Offsets are sequential integers that mark the position of a message in a partition.
+	- Each record within a partition has a unique offset, starting from 0.
+	- Consumers can specify where they want to start reading by providing offset (e.g., the most recent offset, or offset 0 to read from the beginning).
+
+- Consuming Topics:
+	- For a topic with multiple partitions, Kafka assigns a partition in a round-robin fashion, but users can also implement custom partitioning logic 
+	  (e.g., based on message key)
+	- Consumers read messages from partitions, tracking the last offset they consumed.
+	- Kafka does not automatically delete messages once they are consumed.
+	- It keeps message based on a configured retention policy(e.g., 7 days or 100 GB per partition) 
+	- Kafka provides the flexibility to reprocess messages by reading from an older offset.
+
+Summary:
+	- Topics are message streams with one or more partitions.
+	- Partitions contains messages with unique offsets per partitions.
