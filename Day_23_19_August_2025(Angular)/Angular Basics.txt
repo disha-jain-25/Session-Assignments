@@ -1,0 +1,136 @@
+Angular :
+	
+	- What is Angular and Why Use It?
+		- Angular is a TypeScript-based front-end framework developed and maintained by Google for building dynamic, 
+		- single-page applications (SPAs).
+
+	- Why use Angular?
+		* Two-way Data Binding – automatically syncs data between model and view.
+		* Component-based architecture – makes applications modular, reusable, and maintainable.
+		* Dependency Injection – manages service dependencies easily.
+		* Directives – extend HTML with custom behaviors.
+		* RxJS & Observables – for handling async data streams (HTTP requests, events).
+
+		* Example:
+			Suppose you’re making a Task Management App With Angular:
+				* A `TaskComponent` can display tasks.
+				* A `TaskService` can fetch tasks from the backend.
+				* Data binding updates the UI automatically when tasks change.
+
+	- Setting up Angular Development Environment
+		Step 1: Install Node.js
+			Download and install from [Node.js official site](https://nodejs.org).
+			Verify:
+
+				```
+					node -v
+					npm -v
+				```
+		Step 2: Install Angular CLI
+
+			```
+				npm install -g @angular/cli
+			```
+
+			Verify :
+
+				```
+					ng version
+				```
+
+		Step 3: Create New Angular Project
+
+			```
+				ng new my-first-app
+				cd my-first-app
+				ng serve
+			```
+
+			Then open [http://localhost:4200](http://localhost:4200).
+
+	
+	- Understanding Angular Project Structure
+
+		- When you create a project (`ng new`), you’ll see:
+
+		```
+			my-first-app
+			│-- src
+			│   │-- app
+			│   │   │-- app.component.ts        // Root component (logic)
+			│   │   │-- app.component.html      // Root component (template)
+			│   │   │-- app.component.css       // Styles for component
+			│   │   │-- app.module.ts           // Root module
+			│   │
+			│   │-- assets/                     // Images, icons, static files
+			│   │-- environments/               // Environment configs
+			│   │-- main.ts                     // Entry point of the app
+			│   │-- index.html                  // Main HTML file
+			│   │-- styles.css                  // Global styles
+
+	- Key Parts:
+		* main.ts → Starts the Angular app, bootstraps `AppModule`.
+		* app.module.ts → Defines the root module, declares components/services.
+		* components → Small building blocks of the UI.
+		* services → Handle business logic, API calls, etc.
+
+	- Component Lifecycle Hooks
+		- Every Angular component has a lifecycle(from creation → changes → destruction).
+		- Angular provides hooks (methods) to tap into these stages.
+		- Common Lifecycle Hooks:
+			1.ngOnInit() – Called once after the component is created.
+			2.ngOnChanges() – Runs when input-bound properties change.
+			3.ngDoCheck() – Detects custom changes.
+			4.ngAfterViewInit() – Runs after component’s view is initialized.
+			5.ngOnDestroy() – Runs before component is destroyed (cleanup).
+
+			- Example:
+
+				```
+					import { Component, OnInit, OnChanges, OnDestroy, Input } from '@angular/core';
+
+					@Component({
+  						selector: 'app-user',
+  						template: `<h2>Hello, {{name}}</h2>`
+					})
+					export class UserComponent implements OnInit, OnChanges, OnDestroy {
+  
+  					@Input() name!: string;
+
+  					constructor() {
+    						console.log('Constructor: Component instance created');
+  					}
+
+  					ngOnInit() {
+    						console.log('ngOnInit: Component initialized');
+  					}
+
+  					ngOnChanges() {
+    						console.log('ngOnChanges: Input property changed');
+  					}
+
+  					ngOnDestroy() {
+    						console.log('ngOnDestroy: Component destroyed');
+  					}
+				}
+		
+	- Usage in parent template:
+
+		```html
+			<app-user [name]="'Disha'"></app-user>
+		```
+
+		- Output in console (order):
+
+			```
+				Constructor: Component instance created
+				ngOnInit: Component initialized
+				ngOnChanges: Input property changed
+			```
+
+			If the component is removed from DOM:
+
+			```
+				ngOnDestroy: Component destroyed
+			```
+
