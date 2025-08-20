@@ -1,0 +1,142 @@
+Components:
+
+
+	* Components – Creation and Structure
+		- In Angular, components are the building blocks of the UI.
+		- A component controls a part of the screen (called a view).
+
+	* Structure of a Component
+
+		A component in Angular has three main parts:
+			1.TypeScript class -> Handles data & logic.
+			2.HTML template -> Defines how the view looks.
+			3.CSS/Styles -> Defines the design of the component.
+
+			- Example – Creating a Component
+
+				```
+					ng generate component hello
+				```
+
+				This creates:
+
+					```
+						hello/
+ 						├── hello.component.ts      (logic)
+ 						├── hello.component.html    (template)
+ 						├── hello.component.css     (styles)
+ 						└── hello.component.spec.ts (test file)
+					```
+
+					#### hello.component.ts
+
+						```
+							import { Component } from '@angular/core';
+
+							@Component({
+  								selector: 'app-hello',
+  								templateUrl: './hello.component.html',
+  								styleUrls: ['./hello.component.css']
+							})
+
+							export class HelloComponent {
+  								name: string = "Disha"; // data property
+							}
+						```
+
+					#### hello.component.html
+
+						```
+							<h2>Hello, {{ name }}! 👋</h2>
+						```
+						This will render **Hello, Disha! 👋** in the browser.
+
+	* Templates and Data Binding
+
+		- Templates are the HTML files where we write UI code.
+		- Data Binding connects the TypeScript class (data/logic) with the template (view).
+
+		- Types of Data Binding:
+			1.Interpolation (One-way)→ `{{ data }}`
+
+   				```html
+   					<p>Hello {{ name }}</p>
+   				```
+			2.Property Binding → `[property]="data"`
+
+   				```html
+   					<img [src]="imageUrl">
+   				```
+			3.Event Binding → `(event)="method()"`
+
+   				```html
+   					<button (click)="sayHello()">Click Me</button>
+   				```
+			4. Two-way Binding → `[(ngModel)]="data"` (needs FormsModule)
+
+   				```html
+   					<input [(ngModel)]="name">
+   					<p>You typed: {{ name }}</p>
+   				```
+
+
+	* Pipes – Built-in and Custom
+
+		- Pipes transform data in templates before displaying it.
+		- Angular comes with many built-in pipes, and you can also create custom pipes.
+
+	* Built-in Pipes
+
+		```html
+			<p>Uppercase: {{ 'angular' | uppercase }}</p>
+			<p>Lowercase: {{ 'ANGULAR' | lowercase }}</p>
+			<p>Date: {{ today | date:'fullDate' }}</p>
+			<p>Currency: {{ 2500 | currency:'INR' }}</p>
+			<p>Decimal: {{ 3.14159 | number:'1.2-2' }}</p>
+		```
+
+			Output:
+
+				```
+					Uppercase: ANGULAR
+					Lowercase: angular
+					Date: Wednesday, August 20, 2025
+					Currency: ₹2,500.00
+					Decimal: 3.14
+				```
+
+	* Custom Pipe Example
+		- Generate Pipe
+
+			```bash
+				ng generate pipe reverse
+			```
+
+		- reverse.pipe.ts
+
+			```ts
+				import { Pipe, PipeTransform } from '@angular/core';
+
+				@Pipe({
+  					name: 'reverse'
+				})
+				export class ReversePipe implements PipeTransform {
+  					transform(value: string): string {
+    						return value.split('').reverse().join('');
+  					}
+				}
+			```
+
+		- Usage in Template
+
+			```html
+				<p>Original: Angular</p>
+				<p>Reversed: {{ 'Angular' | reverse }}</p>
+			```
+
+				Output:
+
+					```
+						Original: Angular
+						Reversed: ralugnA
+					```
