@@ -1,0 +1,155 @@
+* Decorator in Angular:
+
+	- A decorator is a special kind of declaration in Angular that can attach metadata to classes, methods, properties, or parameters.
+	- Example:
+
+		```ts
+			import { Component } from '@angular/core';
+
+			@Component({
+  				selector: 'app-root',
+  				template: `<h1>Hello Angular</h1>`,
+  				styles: ['h1 { color: blue; }']
+			})
+			export class AppComponent { }
+		```
+
+	- Here:
+		* `@Component` → decorator tells Angular this class is a component.
+		* Other decorators: `@NgModule`, `@Injectable`, `@Input`, `@Output`, etc.
+
+
+* Why Angular is a Single Page Application (SPA)?
+
+	- SPA means the application loads a single HTML page (`index.html`) and dynamically updates the view without full page reloads.
+	- Angular achieves SPA using Routing, Components, and Services.
+	- Example: Navigating between `/home` and `/about` doesn’t reload the whole page, only the component view changes.
+
+	- Benefits:
+		* Faster navigation	
+		* Better user experience
+		* Reduced server load
+
+
+* Routing in Angular:
+
+	- Angular Router-Module helps in SPA navigation.
+
+	- Example:
+
+		```ts
+			import { NgModule } from '@angular/core';
+			import { RouterModule, Routes } from '@angular/router';
+			import { HomeComponent } from './home.component';
+			import { AboutComponent } from './about.component';
+			import { PageNotFoundComponent } from './page-not-found.component';
+
+			const routes: Routes = [
+  				{ path: '', redirectTo: '/home', pathMatch: 'full' },  // default route
+  				{ path: 'home', component: HomeComponent },
+  				{ path: 'about', component: AboutComponent },
+  				{ path: '**', component: PageNotFoundComponent }  // Wildcard route
+			];
+
+			@NgModule({
+  				imports: [RouterModule.forRoot(routes)],
+  				exports: [RouterModule]
+			})
+			export class AppRoutingModule { }
+		```
+
+		- Types of Routes:
+
+			* Default Route → when path is empty
+			* Parameterized Route → `path: 'user/:id'`
+			* Child Routes → nested navigation
+			* Wildcard Route → `{ path: '**', component: PageNotFoundComponent }`
+
+* Forms in Angular:
+
+	- Angular provides two types of forms:
+
+		1) Template-driven Form
+
+			* Simpler, suitable for small forms.
+			* Uses `FormsModule`.
+			* Example:
+
+				```html
+					<form #userForm="ngForm" (ngSubmit)="onSubmit(userForm.value)">
+  					<input name="username" ngModel required>
+  					<input type="email" name="email" ngModel required email>
+  					<button type="submit">Submit</button>
+					</form>
+				```
+
+				```ts
+					onSubmit(formData: any) {
+  						console.log(formData);
+					}
+				```
+
+			* Angular automatically creates `FormControl` objects.
+
+		
+		2) Reactive Form
+
+			* More powerful, suitable for complex forms.
+			* Uses `ReactiveFormsModule`.
+			* Example:
+
+				```ts
+					import { Component } from '@angular/core';
+					import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+					@Component({
+  						selector: 'app-reactive-form',
+  						templateUrl: './reactive-form.component.html'
+					})
+					export class ReactiveFormComponent {
+  						userForm = new FormGroup({
+    							username: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    							email: new FormControl('', [Validators.required, Validators.email])
+  					});
+
+  					onSubmit() {
+    						console.log(this.userForm.value);
+  						}
+					}
+				```
+
+				```html
+					<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  					<input type="text" formControlName="username">
+  					<div *ngIf="userForm.get('username')?.invalid && userForm.get('username')?.touched">
+    						Username is required (min 3 chars)
+  					</div>
+
+  					<input type="email" formControlName="email">
+  					<div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+    						Enter valid email
+  					</div>
+
+  					<button type="submit" [disabled]="userForm.invalid">Submit</button>
+					</form>
+				```
+
+
+*Form Validations:
+
+	- Built-in Validators: `required`, `minLength`, `maxLength`, `email`, `pattern`.
+	- Custom Validator:
+
+		```ts
+			function noSpecialChars(control: FormControl) {
+  				const forbidden = /[!@#$%^&*]/.test(control.value);
+  				return forbidden ? { 'forbiddenChars': true } : null;
+			}
+		```
+
+	- Use in Reactive form:
+
+		```ts
+			username: new FormControl('', [Validators.required, noSpecialChars])
+		```
+
