@@ -1,0 +1,141 @@
+HttpClientModule :
+
+	- In Angular, to make HTTP requests (GET, POST, PUT, DELETE), we use HttpClient service from HttpClientModule.
+	
+	-  Importing `HttpClientModule`
+
+		* Before using HTTP methods, we need to import `HttpClientModule` in your Angular app (usually in `app.module.ts`):
+
+			```ts
+				import { NgModule } from '@angular/core';
+				import { BrowserModule } from '@/angular/platform-browser';
+				import { HttpClientModule } from '@angular/common/http';  // Import this
+				import { AppComponent } from './app.component';
+
+				@NgModule({
+  					declarations: [AppComponent],
+  					imports: [
+    						BrowserModule,
+    						HttpClientModule   // Add here
+  					],
+  					providers: [],
+  					bootstrap: [AppComponent]
+				})
+				export class AppModule { }
+			```
+
+
+	- Using `HttpClient` in a Service
+
+		* It’s a best practice to keep HTTP calls in a service.
+		* Example service file: `user.service.ts`
+
+			```ts
+				import { Injectable } from '@angular/core';
+				import { HttpClient } from '@angular/common/http';
+				import { Observable } from 'rxjs';
+
+				@Injectable({
+ 	 				providedIn: 'root'
+				})
+				export class UserService {
+  					private apiUrl = 'https://jsonplaceholder.typicode.com/users';
+
+  					constructor(private http: HttpClient) { }
+
+  					// GET - Fetch all users
+  					getUsers(): Observable<any> {
+    						return this.http.get(this.apiUrl);
+  					}
+
+  					// GET by ID - Fetch single user
+  					getUserById(id: number): Observable<any> {
+    						return this.http.get(`${this.apiUrl}/${id}`);
+  					}
+
+  					// POST - Add new user
+  					addUser(user: any): Observable<any> {
+    						return this.http.post(this.apiUrl, user);
+  					}
+
+  					// PUT - Update existing user
+  					updateUser(id: number, user: any): Observable<any> {
+    						return this.http.put(`${this.apiUrl}/${id}`, user);
+  					}
+
+  					// DELETE - Remove user
+  					deleteUser(id: number): Observable<any> {
+    						return this.http.delete(`${this.apiUrl}/${id}`);
+  					}
+				}	
+		```
+
+	
+	- Using Service in a Component
+
+		* Example: `app.component.ts`
+
+			```ts
+				import { Component, OnInit } from '@angular/core';
+				import { UserService } from './user.service';
+
+				@Component({
+  					selector: 'app-root',
+  					template: `
+    						<h2>Angular HttpClient Example</h2>
+
+    						<button (click)="fetchUsers()">GET Users</button>
+    						<button (click)="createUser()">POST User</button>
+    						<button (click)="editUser()">PUT User</button>
+    						<button (click)="removeUser()">DELETE User</button>
+
+    						<pre>{{ users | json }}</pre>
+  					`
+					})
+					export class AppComponent implements OnInit {
+  						users: any;
+
+  						constructor(private userService: UserService) {}
+
+  						ngOnInit(): void { }
+
+  						// GET Request
+  						fetchUsers() {
+    							this.userService.getUsers().subscribe(data => {
+      							this.users = data;
+
+    							});
+  						}
+
+  						// POST Request
+  						createUser() {
+    							const newUser = { name: 'Disha', email: 'disha@example.com' };
+    							this.userService.addUser(newUser).subscribe(data => {
+      							console.log('User Created:', data);
+    							});
+  						}
+
+  						// PUT Request
+  						editUser() {
+    							const updatedUser = { name: 'Updated Disha', email: 'updated@example.com' };
+    							this.userService.updateUser(1, updatedUser).subscribe(data => {
+      								console.log('User Updated:', data);
+    							});
+  						}
+
+  						// DELETE Request
+  						removeUser() {
+    							this.userService.deleteUser(1).subscribe(data => {
+      							console.log('User Deleted:', data);
+    							});
+  						}
+			}
+		```
+
+	- Explanation of HTTP Methods
+
+		* GET → Fetch data from server (e.g., all users, or single user by ID).
+		* POST → Send new data to server (e.g., create new user).
+		* PUT → Update existing data (e.g., modify a user).
+		* DELETE → Remove data (e.g., delete a user).
+
