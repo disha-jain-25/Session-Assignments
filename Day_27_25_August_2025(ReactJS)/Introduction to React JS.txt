@@ -1,0 +1,151 @@
+Introduction to React JS:
+
+	- JSX (JavaScript XML) is a syntax extension for JavaScript that looks like HTML but allows you to write HTML-like code inside JavaScript. 
+	- React uses JSX to describe what the UI should look like.
+
+	- Key Points:
+		* JSX is not mandatory but makes React code easier to read.
+		* You can embed JavaScript expressions inside `{}`.
+		* JSX must have a single root element.
+
+	- Example:
+
+		```jsx
+			import React from "react";
+			import ReactDOM from "react-dom/client";
+
+			const element = <h1>Hello, React JSX!</h1>;
+
+			const name = "Disha";
+			const greeting = <p>Welcome, {name}!</p>;
+
+			const App = () => (
+  				<div>
+    					{element}
+    					{greeting}
+  				</div>
+			);
+
+			const root = ReactDOM.createRoot(document.getElementById("root"));
+			root.render(<App />);
+		```
+
+
+Components:
+
+	- Components are the building blocks of a React application. They allow you to split the UI into independent, reusable pieces.
+
+	- Types:
+		* Functional Components (modern and recommended)
+		* Class Components (older style, less used now)
+		* Example: Functional Component
+
+			```jsx
+				import React from "react";
+
+				const Header = () => {
+  					return <h2>This is the Header Component</h2>;
+				};
+
+				const App = () => (
+  					<div>
+    						<Header />
+    						<p>This is the main App Component</p>
+  					</div>
+				);
+
+				export default App;
+			```
+
+
+Props:
+
+	- Props (short for properties) are used to pass data from a parent component to a child component. 
+	- Props are read-only inside the child component.
+	- Example:
+
+		```jsx
+			const Greeting = ({ name }) => {
+  				return <h3>Hello, {name}!</h3>;
+			};
+
+			const App = () => (
+  				<div>
+    					<Greeting name="Disha" />
+    					<Greeting name="Alex" />
+  				</div>
+			);
+		```
+
+React Hooks:
+
+	- Hooks are functions that let you “hook into” React state and lifecycle features in functional components.
+
+	- Common Hooks:
+
+		* `useState` – to manage state
+		* `useEffect` – to handle side effects (like API calls or timers)
+
+	- Example with useState and useEffect:
+
+		```jsx
+			import React, { useState, useEffect } from "react";
+
+			const Counter = () => {
+  				const [count, setCount] = useState(0);
+
+  				useEffect(() => {
+    					console.log("Component mounted or count changed:", count);
+  				}, [count]); // runs whenever 'count' changes
+
+  				return (
+    					<div>
+      						<h2>Count: {count}</h2>
+      						<button onClick={() => setCount(count + 1)}>Increment</button>
+    					</div>
+  				);
+			};
+
+			export default Counter;
+		```
+
+React Router:
+
+	- React Router is used for navigating between different pages (components) in a React application without refreshing the page.
+
+	- Steps:
+
+		1. Install:
+
+			```bash
+				npm install react-router-dom
+			```
+
+		2. Setup routes in `App.js`:
+
+			- Example:
+
+				```jsx
+					import React from "react";
+					import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
+					const Home = () => <h2>Home Page</h2>;
+					const About = () => <h2>About Page</h2>;
+
+					const App = () => {
+  						return (
+    							<Router>
+      								<nav>
+        								<Link to="/">Home</Link> | <Link to="/about">About</Link>
+      								</nav>
+      								<Routes>
+        								<Route path="/" element={<Home />} />
+        								<Route path="/about" element={<About />} />
+      								</Routes>
+    							</Router>
+  						);
+					};
+
+					export default App;
+				```
+
