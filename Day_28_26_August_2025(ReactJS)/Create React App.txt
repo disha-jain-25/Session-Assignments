@@ -1,0 +1,183 @@
+Create React App:
+
+	- `create-react-app` is a tool to quickly set up a React project with all configurations (Webpack, Babel, ESLint, etc.) already done for you.
+	- It creates a ready-to-run React app structure.
+
+Command:
+
+	```bash
+		npx create-react-app my-app
+		cd my-app
+		npm start
+	```
+
+	It will start a development server at `http://localhost:3000`.
+
+
+Folder & File Overview (default CRA structure):
+
+	```
+		my-app/
+		│
+		├── node_modules/        → all dependencies
+		├── public/              → static assets (favicon, index.html)
+		│   └── index.html       → root HTML file
+		├── src/                 → your React code
+		│   ├── index.js         → entry point, renders <App />
+		│   ├── App.js           → main app component
+		│   ├── App.css          → styles for App
+		│   └── components/      → (you create this) store components
+		├── package.json         → project dependencies & scripts
+		└── README.md
+	```
+
+	* `index.html` → only one HTML page (Single Page Application)
+	* `index.js` → renders React app into `<div id="root"></div>`
+	* `App.js` → your first React component
+
+
+JSX and Babel Basics:
+
+	* JSX (JavaScript XML) allows you to write HTML-like syntax inside JavaScript.
+	* Babel is the transpiler that converts JSX into plain JavaScript.
+
+	* Example:
+
+		```jsx
+			// JSX
+			const element = <h1>Hello, React!</h1>;
+
+			// What Babel converts it to
+			const element = React.createElement("h1", null, "Hello, React!");
+		```
+
+Components in Depth:
+
+	- Components are the building blocks of React apps.
+
+		* Functional components (modern, preferred)
+		* Class components (older, still exist)
+
+Functional Component:
+
+	```jsx
+		function Welcome() {
+  			return <h1>Welcome to React</h1>;
+		}
+	```
+
+Class Component:
+
+	```jsx
+		import React, { Component } from "react";
+
+		class Welcome extends Component {
+  			render() {
+    				return <h1>Welcome to React</h1>;
+  			}
+		}
+	```
+
+Props:
+
+	- Props (short for properties) are used to pass data from parent to child components.
+	- Props are read-only.
+
+	- Example:
+
+		```jsx
+			// App.js
+			import Greeting from "./Greeting";
+
+			function App() {
+  				return (
+    					<div>
+      						<Greeting name="Disha" />
+      						<Greeting name="Alex" />
+    					</div>
+  				);
+			}
+
+			// Greeting.js
+			function Greeting(props) {
+  				return <h2>Hello, {props.name}!</h2>;
+			}
+
+			export default Greeting;
+		```
+
+		- Output:
+
+			```
+				Hello, Disha!
+				Hello, Alex!
+			```
+
+
+Reusability:
+
+	- React components are reusable — you write once, use multiple times.
+	- This avoids duplicate code.
+
+	- Example:
+
+		```jsx
+			// Button.js
+			function Button({ text }) {
+  				return <button>{text}</button>;
+			}
+			export default Button;
+
+			// App.js
+			import Button from "./Button";
+	
+			function App() {
+  				return (
+    					<div>
+      						<Button text="Login" />
+      						<Button text="Register" />
+      						<Button text="Logout" />
+    					</div>
+  				);
+			}
+		```
+
+
+Component Composition:
+
+	- Composition means combining smaller components to build bigger UIs.
+
+	- Example:
+
+		```jsx
+			// Header.js
+			function Header() {
+  				return <h1>My Website</h1>;
+			}
+
+			// Footer.js
+			function Footer() {
+  				return <p>© 2025 My Website</p>;
+			}
+
+			// Content.js
+			function Content() {
+  				return <p>Welcome to the homepage!</p>;
+			}
+
+			// App.js
+			import Header from "./Header";
+			import Content from "./Content";
+			import Footer from "./Footer";
+
+			function App() {
+  				return (
+    					<div>
+      						<Header />
+      						<Content />
+      						<Footer />
+    					</div>
+  				);
+			}
+		```
+
