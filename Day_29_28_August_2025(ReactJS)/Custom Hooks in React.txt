@@ -1,0 +1,158 @@
+* Custom Hooks in React:
+
+	- What is a Custom Hook?
+
+		* A custom hook is just a JavaScript function whose name starts with `use`.
+		* It lets you reuse logic (like fetching data, form handling, authentication, etc.) across components without repeating code.
+
+		* Example: A custom hook to manage a counter without Redux
+
+			```jsx
+				// useCounter.js
+				import { useState } from "react";
+
+				function useCounter(initialValue = 0) {
+  					const [count, setCount] = useState(initialValue);
+
+  					const increment = () => setCount((prev) => prev + 1);
+  					const decrement = () => setCount((prev) => prev - 1);
+  					const reset = () => setCount(initialValue);
+
+  					return { count, increment, decrement, reset };
+				}
+
+				export default useCounter;
+			```
+
+		* Using it in a component:
+
+			```jsx
+				import React from "react";
+				import useCounter from "./useCounter";
+
+				function CounterComponent() {
+  					const { count, increment, decrement, reset } = useCounter(0);
+
+  					return (
+    						<div>
+      							<h2>Custom Hook Counter: {count}</h2>
+      							<button onClick={increment}>➕ Increment</button>
+      							<button onClick={decrement}>➖ Decrement</button>
+      							<button onClick={reset}>🔄 Reset</button>
+    						</div>
+  					);
+				}
+
+				export default CounterComponent;
+			```
+
+		* Benefit: Reusable counter logic without duplicating code.
+
+
+* Redux Toolkit - Slices (Counter Example):
+
+	- Why Redux Toolkit (RTK)?
+
+		* Simplifies Redux setup.
+		* Less boilerplate.
+		* Uses slices (state + reducers in one file).
+
+	- Steps:
+
+		a) Install
+
+			```bash
+				npm install @reduxjs/toolkit react-redux
+			```
+
+		b) Create a counter slice
+
+			```js
+				// counterSlice.js
+				import { createSlice } from "@reduxjs/toolkit";
+
+				const counterSlice = createSlice({
+  					name: "counter",
+  					initialState: { value: 0 },
+  					reducers: {
+    						increment: (state) => {
+      						state.value += 1;
+    					},
+    						decrement: (state) => {
+      					state.value -= 1;
+    				},
+    					reset: (state) => {
+      						state.value = 0;
+    					},
+    					incrementByAmount: (state, action) => {
+      						state.value += action.payload;
+    					},
+  				},
+			});
+
+			export const { increment, decrement, reset, incrementByAmount } = counterSlice.actions;
+			export default counterSlice.reducer;
+		```
+
+* Configure the Store
+
+	```js
+		// store.js
+		import { configureStore } from "@reduxjs/toolkit";
+		import counterReducer from "./counterSlice";
+
+		export const store = configureStore({
+  			reducer: {
+    				counter: counterReducer,
+  			},
+		});
+	```
+
+* Provide the Store in `index.js`
+
+	```jsx
+		import React from "react";
+		import ReactDOM from "react-dom";
+		import { Provider } from "react-redux";
+		import { store } from "./store";
+		import App from "./App";
+
+		ReactDOM.render(
+  			<Provider store={store}>
+    			<App />
+  			</Provider>,
+  			document.getElementById("root")
+		);
+	```
+
+* Use Counter in Component
+
+	```jsx
+		// Counter.js
+		import React from "react";
+		import { useSelector, useDispatch } from "react-redux";
+		import { increment, decrement, reset, incrementByAmount } from "./counterSlice";
+
+		function Counter() {
+  			const count = useSelector((state) => state.counter.value);
+  			const dispatch = useDispatch();
+
+  			return (
+    				<div>
+      					<h2>Redux Toolkit Counter: {count}</h2>
+      					<button onClick={() => dispatch(increment())}>➕ Increment</button>
+      					<button onClick={() => dispatch(decrement())}>➖ Decrement</button>
+      					<button onClick={() => dispatch(reset())}>🔄 Reset</button>
+      					<button onClick={() => dispatch(incrementByAmount(5))}>➕ +5</button>
+    				</div>
+  			);
+		}
+
+		export default Counter;
+	```
+
+
+* Key Difference:
+
+	* Custom Hook → Local, reusable state logic (good for small apps, isolated features).
+	* Redux Toolkit (Slice) → Centralized global state management (good for larger apps where multiple components need shared state).
